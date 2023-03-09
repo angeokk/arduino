@@ -9,11 +9,14 @@
 #define LED_PIN2 11
 
 #define LASER_PIN 12
+#define PHOTORESISTOR_PIN 1
 
 const int chance = 80240;
 const int turned_time = 2000;
 
 const int off2 = 5;
+
+const int volt_divider = 500; //0-1023 0-5
 
 
 class SLP{ //servo,led,photoresistor
@@ -30,7 +33,7 @@ class SLP{ //servo,led,photoresistor
   public:
 
 
-    void setup(short ledPin, short servoPin/*,short prPin*/, int offset){
+    void setup(short ledPin, short servoPin, short prPin, int offset){
       servo_pin = servoPin;
       servo.attach(servoPin);
       servoOff = offset;
@@ -38,8 +41,8 @@ class SLP{ //servo,led,photoresistor
       led_pin = ledPin;
       pinMode(ledPin, OUTPUT);
       digitalWrite(ledPin, LOW);
-      //pr_pin = prPin
-      //pinMode(prPin, INPUT);
+      pr_pin = prPin;
+      pinMode(prPin, INPUT);
     }
 
     void hitSequence(){
@@ -79,9 +82,9 @@ class SLP{ //servo,led,photoresistor
 
     void isHit(){
       if(turned){
-        // if(digitalread(pr_pin)==HIGH){
-         // hitSequence();
-        // }
+        if(analogRead(pr_pin)>volt_divider){
+          hitSequence();
+        }
       }
     } 
   
@@ -102,7 +105,7 @@ void setup() {
   servo1.write(0);
   servo2.write(off2);
   
-  //slp.setup(LED_PIN1, SERVO_2_PIN, off2);
+  //slp.setup(LED_PIN1, SERVO_2_PIN, PHOTORESISTOR_PIN, off2);
   
 }
 

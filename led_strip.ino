@@ -11,6 +11,8 @@
 #define SERVO_1_PIN 8
 #define SERVO_2_PIN 9
 
+#define LASER_PIN 10
+
 //#define OUT 11
 
 const int rotating_time = 300;
@@ -127,10 +129,12 @@ class LoadingBar{
       if(full){
         if(currentMillisLed>=trigger_time && rounds>triggers){
           rounds-=1;
+          digitalWrite(LASER_PIN, LOW);
         }
         if(rounds==triggers && digitalRead(BUTTON_PIN)){
           startMillisLed = millis(); 
           triggers = triggers - 1;
+          digitalWrite(LASER_PIN, HIGH);
           strip.clear();
           setCol(triggers, 255, 0, 0); 
           strip.show();
@@ -159,6 +163,8 @@ void setup() {
   lb.stripSetup();
   pinMode(BUTTON_PIN, INPUT_PULLUP); // Set button pin as input with internal pull-up resistor
   pinMode(MAGN_SENS_PIN, INPUT);
+  pinMode(LASER_PIN, OUTPUT);
+  digitalWrite(LASER_PIN, LOW);
 }
 
 void loop() {
